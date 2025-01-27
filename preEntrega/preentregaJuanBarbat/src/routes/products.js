@@ -10,7 +10,6 @@ export const ProductsRouter = Router()
 const pathToProducts = path.join(config.dirname, '/src/data/products.json')
 
 console.log(pathToProducts)
-// console.log(config.dirname)
 ProductsRouter.get('/', async (req, res) => {
   let productsString = await fs.promises.readFile(pathToProducts, 'utf-8')
   const products = JSON.parse(productsString)
@@ -18,7 +17,6 @@ ProductsRouter.get('/', async (req, res) => {
 })
 
 ProductsRouter.post('/', validateInputProducts, async (req, res) => {
-  //Logica para generar el producto
   let productsString = await fs.promises.readFile(pathToProducts, 'utf-8')
   const products = JSON.parse(productsString)
 
@@ -55,12 +53,84 @@ ProductsRouter.post('/', validateInputProducts, async (req, res) => {
   res.send({ message: 'Producto creado', data: product })
 })
 
-/* UsersRouter.get('/', (req, res) => {
-    //get users
-    res.send({message: 'ok'})
-})
+ProductsRouter.get('/:id', async (req, res) => {
+  const { id } = req.params; 
 
-UsersRouter.get('/:id', (req, res) => {
-    //get users
-    res.send({message: {...req.params}})
-}) */
+  let productsString = await fs.promises.readFile(pathToProducts, 'utf-8');
+  const products = JSON.parse(productsString);
+
+  // Buscar producto por ID
+  const product = products.find((product) => product.id === id);
+
+  if (product) {
+    res.status(200).json({
+      message: `Producto con ID ${id} encontrado`,
+      data: product,
+    });
+  } else {
+    res.status(404).json({
+      message: `Producto con ID ${id} no encontrado`,
+    });
+  }
+});
+
+// Ruta para actualizar un producto por ID
+ProductsRouter.put('/:id', async (req, res) => {
+  const { id } = req.params; // Obtener el ID del parámetro de la URL
+  const {
+    title,
+    description,
+    code,
+    price,
+    status,
+    stock,
+    category,
+    thumbnails,
+  } = req.body; // Obtener los datos del producto a actualizar
+
+  // Verificar que el ID en la URL coincide con el ID enviado en el cuerpo de la solicitud
+  if (req.body.id && req.body.id !== id) {
+    return res.status(400).json({
+      message: `No se puede modificar el ID del producto`,
+    });
+  }
+
+  let productsString = await fs.promises.readFile(pathToProducts, 'utf-8');
+  const products = JSON.parse(productsString);
+
+  // Buscar el índice del producto a actualizar
+  const productIndex = products.findIndex((product) => product.id === id);
+
+  if (productIndex === -1) {
+    return res.status(404).json({
+      message: `Producto con ID ${id} no encontrado`,
+    });
+  }
+
+  // Actualizar solo los campos que fueron enviados
+  const updatedProduct = {
+    ...products[productIndex], // Mantener los valores actuales
+    ...(title !== undefined && { title }), // Solo actualizar si se proporciona un valor
+    ...(description !== undefined && { description }),
+    ...(code !== undefined && { code }),
+    ...(price !== undefined && { price }),
+    ...(status !== undefined && { status }), // Asegurarse de que 'status' puede ser false
+    ...(stock !== undefined && { stock }),
+    ...(category !== undefined && { category }),
+    ...(thumbnails !== undefined && { thumbnails }),
+  };
+
+  // Reemplazar el producto actualizado en el array
+  products[productIndex] = updatedProduct;
+
+  const productsStringified = JSON.stringify(products, null, '\t');
+  await fs.promises.writeFile(pathToProducts, productsStringified);
+
+  res.status(200).json({
+    message: `Producto con ID ${id} actualizado con éxito`,
+    data: updatedProduct,
+  });
+});
+
+
+

@@ -12,10 +12,10 @@
 	},
 	{
 		"id": "36640fac-f282-435d-b550-a24b1b2de526",
+		"price": 550,
 		"title": "Pastor Alemán",
 		"description": "Perro guardián",
 		"code": 1234,
-		"price": 200,
 		"status": true,
 		"stock": 12,
 		"category": "Perro",
