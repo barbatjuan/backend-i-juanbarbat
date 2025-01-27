@@ -5,3 +5,8 @@ export const validateInputProducts = (req, res, next) => {
   console.log('Entra al middleware de validacion')
   next()
 }
+
+// export const validateInputCarts = (req, res, next) => {
+//   console.log('Entra al middleware de validacion de carts')
+//   next()
+// }

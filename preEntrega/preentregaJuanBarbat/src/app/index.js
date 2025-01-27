@@ -16,25 +16,6 @@ const initApp = () => {
    * @property {string} id
    */
 
-  /*   const middlewareHome = (req, res, next) => {
-    req.mensajeBienvenida = 'Bienvenido al home gato!'
-    // res.send('ok')
-    next()
-  } */
-
-  /*   app.get('/api/home', middlewareHome, (req, res) => {
-    // throw new Error('Oops ocurrio un error')
-    res.status(200).send({ message: req.mensajeBienvenida })
-  }) */
-
-  // app.use('/api/users', UsersRouter)
-
-  // app.use('/pets', PetsRouter)
-
-  // app.use(express.static('public'))
-
-  // app.use('/virtual', express.static('public'))
-
   app.use('/api/products', ProductsRouter)
   app.use('/api/carts', CartsRouter)
 

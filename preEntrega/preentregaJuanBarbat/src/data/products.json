@@ -1,46 +1,46 @@
 [
 	{
 		"id": "dd536769-bf33-41b6-876e-a24754490e36",
-		"title": "titulo",
-		"description": "description",
+		"title": "Doberman",
+		"description": "Perro guardián",
 		"code": 1234,
 		"price": 200,
 		"status": true,
 		"stock": 10,
-		"category": "categoria",
+		"category": "Perro",
 		"thumbnails": []
 	},
 	{
 		"id": "36640fac-f282-435d-b550-a24b1b2de526",
-		"title": "titulo 2",
-		"description": "description 2",
+		"title": "Pastor Alemán",
+		"description": "Perro guardián",
 		"code": 1234,
 		"price": 200,
 		"status": true,
 		"stock": 12,
-		"category": "categoria",
+		"category": "Perro",
 		"thumbnails": []
 	},
 	{
 		"id": "67cbd923-2209-494f-a81a-ef0b3c82657e",
-		"title": "titulo 3",
-		"description": "description 3",
+		"title": "Pug",
+		"description": "Perro al pedo",
 		"code": 1234,
 		"price": 200,
 		"status": true,
 		"stock": 12,
-		"category": "categoria",
+		"category": "Perro",
 		"thumbnails": []
 	},
 	{
 		"id": "80714951-3ea4-492f-9f77-cb6d38af8c05",
-		"title": "dogo",
-		"description": "perro loco",
+		"title": "Dogo Argentino",
+		"description": "Perro guardián",
 		"code": 1234,
 		"price": 200,
 		"status": true,
 		"stock": 10,
-		"category": "categoria",
+		"category": "Perro",
 		"thumbnails": []
 	}
 ]
