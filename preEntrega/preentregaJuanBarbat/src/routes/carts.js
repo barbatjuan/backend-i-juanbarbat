@@ -6,10 +6,10 @@ import { config } from '../config/index.js';
 
 export const CartsRouter = Router();
 
-// Ruta para la base de datos de carritos
+
 const pathToCarts = path.join(config.dirname, '/src/data/carts.json');
 
-// GET: Obtener todos los carritos
+
 CartsRouter.get('/', async (req, res) => {
   let cartsString = await fs.promises.readFile(pathToCarts, 'utf-8');
   const carts = JSON.parse(cartsString);
@@ -19,13 +19,13 @@ CartsRouter.get('/', async (req, res) => {
   });
 });
 
-// GET: Obtener un carrito específico por ID
+
 CartsRouter.get('/:cid', async (req, res) => {
   const { cid } = req.params;
   let cartsString = await fs.promises.readFile(pathToCarts, 'utf-8');
   const carts = JSON.parse(cartsString);
 
-  const cart = carts.find((cart) => cart.id === cid); // Buscar carrito por ID
+  const cart = carts.find((cart) => cart.id === cid); 
 
   if (cart) {
     res.status(200).json({
@@ -39,17 +39,16 @@ CartsRouter.get('/:cid', async (req, res) => {
   }
 });
 
-// POST: Crear un nuevo carrito
 CartsRouter.post('/', async (req, res) => {
   let cartsString = await fs.promises.readFile(pathToCarts, 'utf-8');
   const carts = JSON.parse(cartsString);
 
   const newCart = {
-    id: uuidv4(), // Generar un ID único
-    products: [],  // Carrito vacío inicialmente
+    id: uuidv4(),
+    products: [],
   };
 
-  carts.push(newCart); // Agregar el carrito a la base de datos simulada
+  carts.push(newCart); 
 
   const cartsStringified = JSON.stringify(carts, null, '\t');
   await fs.promises.writeFile(pathToCarts, cartsStringified);
@@ -60,15 +59,13 @@ CartsRouter.post('/', async (req, res) => {
   });
 });
 
-// POST: Agregar un producto al carrito
 CartsRouter.post('/:cid/product/:pid', async (req, res) => {
   const { cid, pid } = req.params;
 
-  // Verificar que el carrito exista
   let cartsString = await fs.promises.readFile(pathToCarts, 'utf-8');
   const carts = JSON.parse(cartsString);
 
-  const cart = carts.find((cart) => cart.id === cid); // Buscar carrito por ID
+  const cart = carts.find((cart) => cart.id === cid); 
 
   if (!cart) {
     return res.status(404).json({
@@ -76,14 +73,11 @@ CartsRouter.post('/:cid/product/:pid', async (req, res) => {
     });
   }
 
-  // Verificar que el producto no esté ya en el carrito
   const productExists = cart.products.find((product) => product.id === pid);
 
   if (productExists) {
-    // Si el producto ya existe, solo aumentar la cantidad
     productExists.quantity += 1;
   } else {
-    // Si el producto no existe, agregarlo al carrito
     cart.products.push({ id: pid, quantity: 1 });
   }
 

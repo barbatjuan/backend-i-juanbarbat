@@ -34,7 +34,6 @@ ProductsRouter.post('/', validateInputProducts, async (req, res) => {
   } = req.body
 
   const product = {
-    //id autogenerado
     id,
     title,
     description,
@@ -59,7 +58,6 @@ ProductsRouter.get('/:id', async (req, res) => {
   let productsString = await fs.promises.readFile(pathToProducts, 'utf-8');
   const products = JSON.parse(productsString);
 
-  // Buscar producto por ID
   const product = products.find((product) => product.id === id);
 
   if (product) {
@@ -74,9 +72,8 @@ ProductsRouter.get('/:id', async (req, res) => {
   }
 });
 
-// Ruta para actualizar un producto por ID
 ProductsRouter.put('/:id', async (req, res) => {
-  const { id } = req.params; // Obtener el ID del parámetro de la URL
+  const { id } = req.params; 
   const {
     title,
     description,
@@ -86,9 +83,8 @@ ProductsRouter.put('/:id', async (req, res) => {
     stock,
     category,
     thumbnails,
-  } = req.body; // Obtener los datos del producto a actualizar
+  } = req.body; 
 
-  // Verificar que el ID en la URL coincide con el ID enviado en el cuerpo de la solicitud
   if (req.body.id && req.body.id !== id) {
     return res.status(400).json({
       message: `No se puede modificar el ID del producto`,
@@ -98,7 +94,6 @@ ProductsRouter.put('/:id', async (req, res) => {
   let productsString = await fs.promises.readFile(pathToProducts, 'utf-8');
   const products = JSON.parse(productsString);
 
-  // Buscar el índice del producto a actualizar
   const productIndex = products.findIndex((product) => product.id === id);
 
   if (productIndex === -1) {
@@ -107,20 +102,19 @@ ProductsRouter.put('/:id', async (req, res) => {
     });
   }
 
-  // Actualizar solo los campos que fueron enviados
+  
   const updatedProduct = {
-    ...products[productIndex], // Mantener los valores actuales
-    ...(title !== undefined && { title }), // Solo actualizar si se proporciona un valor
+    ...products[productIndex], 
+    ...(title !== undefined && { title }), 
     ...(description !== undefined && { description }),
     ...(code !== undefined && { code }),
     ...(price !== undefined && { price }),
-    ...(status !== undefined && { status }), // Asegurarse de que 'status' puede ser false
+    ...(status !== undefined && { status }), 
     ...(stock !== undefined && { stock }),
     ...(category !== undefined && { category }),
     ...(thumbnails !== undefined && { thumbnails }),
   };
 
-  // Reemplazar el producto actualizado en el array
   products[productIndex] = updatedProduct;
 
   const productsStringified = JSON.stringify(products, null, '\t');
@@ -132,5 +126,28 @@ ProductsRouter.put('/:id', async (req, res) => {
   });
 });
 
+ProductsRouter.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  let productsString = await fs.promises.readFile(pathToProducts, 'utf-8');
+  let products = JSON.parse(productsString);
+
+  const productIndex = products.findIndex((product) => product.id === id);
+
+  if (productIndex === -1) {
+    return res.status(404).json({
+      message: `Producto con ID ${id} no encontrado`,
+    });
+  }
+
+  products.splice(productIndex, 1);
+
+  const productsStringified = JSON.stringify(products, null, '\t');
+  await fs.promises.writeFile(pathToProducts, productsStringified);
+
+  res.status(200).json({
+    message: `Producto con ID ${id} eliminado`,
+  });
+});
 
 
