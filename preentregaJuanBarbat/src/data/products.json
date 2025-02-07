@@ -42,5 +42,27 @@
 		"stock": 10,
 		"category": "Perro",
 		"thumbnails": []
+	},
+	{
+		"id": "43020356-56c6-4344-b2fc-5237201d80c5",
+		"title": "chihuahua",
+		"description": "perrito faldero",
+		"code": "2000",
+		"price": 50,
+		"status": true,
+		"stock": 100,
+		"category": "categoria",
+		"thumbnails": []
+	},
+	{
+		"id": "99fde909-ad7d-4158-97c0-b2701ea15c4b",
+		"title": "bull terrier",
+		"description": "perrazo",
+		"code": "1",
+		"price": 500,
+		"status": true,
+		"stock": 100,
+		"category": "categoria",
+		"thumbnails": []
 	}
 ]

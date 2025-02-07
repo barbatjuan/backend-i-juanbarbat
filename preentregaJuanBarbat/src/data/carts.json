@@ -4,6 +4,15 @@
 		"products": [
 			{
 				"id": "dd536769-bf33-41b6-876e-a24754490e36",
+				"quantity": 2
+			}
+		]
+	},
+	{
+		"id": "4a797030-500f-4907-bec1-d47e86768b60",
+		"products": [
+			{
+				"id": "99fde909-ad7d-4158-97c0-b2701ea15c4b",
 				"quantity": 1
 			}
 		]
