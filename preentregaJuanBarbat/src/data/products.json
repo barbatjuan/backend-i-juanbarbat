@@ -12,7 +12,7 @@
 	},
 	{
 		"id": "36640fac-f282-435d-b550-a24b1b2de526",
-		"price": 590,
+		"price": 1590,
 		"title": "Pastor Alemán",
 		"description": "Perro guardián",
 		"code": 1234,
@@ -57,6 +57,17 @@
 	{
 		"id": "99fde909-ad7d-4158-97c0-b2701ea15c4b",
 		"title": "bull terrier",
+		"description": "perrazo",
+		"code": "1",
+		"price": 500,
+		"status": true,
+		"stock": 100,
+		"category": "categoria",
+		"thumbnails": []
+	},
+	{
+		"id": "6110b85c-7bb2-433a-871a-7951fce2baa9",
+		"title": "bull terrier 2",
 		"description": "perrazo",
 		"code": "1",
 		"price": 500,

@@ -1,4 +1,4 @@
 //barrel file
 
-export * from './carts.js'
-export * from './products.js'
+export * from "./CartsRouter.js";
+export * from "./ProductsRouter.js";
