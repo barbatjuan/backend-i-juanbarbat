@@ -23,7 +23,10 @@ const cartSchema = new mongoose.Schema(
   { timestamps: true, versionKey: false }
 );
 
-//pre-populate (opcional)
+// Pre-populate en la consulta de 'find' y 'findOne'
+cartSchema.pre("find", function () {
+  this.populate("products.product");
+});
 cartSchema.pre("findOne", function () {
   this.populate("products.product");
 });

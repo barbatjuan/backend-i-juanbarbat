@@ -7,19 +7,12 @@ const productSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, index: true },
     description: { type: String, required: true, index: true },
-    code: {
-      type: String,
-      unique: true,
-      required: true,
-    },
+    code: { type: String, unique: true, required: true },
     price: { type: Number, required: true, index: true },
-    status: { type: Boolean, default: true }, //if not true, do not display
+    status: { type: Boolean, default: true },
     stock: { type: Number, required: true },
-    category: {
-      type: String,
-      enum: ["Gatos", "Perros"], //Enum de ejemplos
-    },
-    thumbnails: { required: false, type: [String], default: [] },
+    category: { type: String, enum: ["Gatos", "Perros"] },
+    thumbnails: { type: [String], default: [] },
   },
   { timestamps: true, versionKey: false }
 );
