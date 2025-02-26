@@ -4,7 +4,7 @@ import {
   getCartById,
   createCart,
   addProductToCart,
-} from "../controllers/cart.controller.js"; // Importar funciones del controlador
+} from "../controllers/Cart.Controller.js"; // Importar funciones del controlador
 
 export const CartsRouter = Router();
 
