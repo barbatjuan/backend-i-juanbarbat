@@ -17,7 +17,7 @@ const productSchema = new mongoose.Schema(
     stock: { type: Number, required: true },
     category: {
       type: String,
-      enum: ["Gatos", "Perros"], //Enum de ejemplo
+      enum: ["Gatos", "Perros"], //Enum de ejemplos
     },
     thumbnails: { required: false, type: [String], default: [] },
   },
