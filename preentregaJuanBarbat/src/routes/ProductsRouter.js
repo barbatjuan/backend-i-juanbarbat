@@ -1,32 +1,21 @@
 import { Router } from "express";
-import fs from "fs";
-import path from "path";
-import { config } from "../config/index.js";
-import { v4 as uuidv4 } from "uuid";
+import { ProductModel } from "../models/products.models.js";
 
 export const ProductsRouter = Router();
 
-const pathToProducts = path.join(config.dirname, "src/data/products.json");
-
-console.log(pathToProducts);
-
+// Obtener todos los productos
 ProductsRouter.get("/", async (req, res) => {
   try {
-    const productsString = await fs.promises.readFile(pathToProducts, "utf-8");
-    const products = JSON.parse(productsString);
-    res.send({ products });
+    const products = await ProductModel.find(); // Obtener todos los productos desde MongoDB
+    res.status(200).json({ products });
   } catch (error) {
     res.status(500).json({ message: "Error al obtener los productos", error });
   }
 });
 
+// Crear un nuevo producto
 ProductsRouter.post("/", async (req, res) => {
   try {
-    const productsString = await fs.promises.readFile(pathToProducts, "utf-8");
-    const products = JSON.parse(productsString);
-
-    const id = uuidv4();
-
     const {
       title,
       description,
@@ -38,28 +27,25 @@ ProductsRouter.post("/", async (req, res) => {
       thumbnails,
     } = req.body;
 
+    // Validar campos obligatorios
     if (!title || !description || !code || !price || !stock || !category) {
       return res.status(400).json({ message: "Faltan campos obligatorios" });
     }
 
-    const product = {
-      id,
+    // Crear un nuevo producto
+    const product = new ProductModel({
       title,
       description,
       code,
       price,
-      status: status ?? true,
+      status: status ?? true, // Por defecto, el producto está activo
       stock,
       category,
-      thumbnails: thumbnails ?? [],
-    };
+      thumbnails: thumbnails ?? [], // Por defecto, no hay imágenes
+    });
 
-    products.push(product);
-
-    await fs.promises.writeFile(
-      pathToProducts,
-      JSON.stringify(products, null, "\t")
-    );
+    // Guardar el producto en MongoDB
+    await product.save();
 
     res.status(201).json({ message: "Producto creado", data: product });
   } catch (error) {
@@ -67,16 +53,16 @@ ProductsRouter.post("/", async (req, res) => {
   }
 });
 
+// Obtener un producto por ID
 ProductsRouter.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const productsString = await fs.promises.readFile(pathToProducts, "utf-8");
-    const products = JSON.parse(productsString);
 
-    const product = products.find((product) => product.id === id);
+    // Buscar el producto por su ID
+    const product = await ProductModel.findById(id);
 
     if (product) {
-      res.status(200).json({ message: `Producto encontrado`, data: product });
+      res.status(200).json({ message: "Producto encontrado", data: product });
     } else {
       res.status(404).json({ message: `Producto con ID ${id} no encontrado` });
     }
@@ -85,6 +71,7 @@ ProductsRouter.get("/:id", async (req, res) => {
   }
 });
 
+// Actualizar un producto por ID
 ProductsRouter.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -99,73 +86,48 @@ ProductsRouter.put("/:id", async (req, res) => {
       thumbnails,
     } = req.body;
 
-    if (req.body.id && req.body.id !== id) {
-      return res.status(400).json({
-        message: "No se puede modificar el ID del producto",
-      });
-    }
-
-    const productsString = await fs.promises.readFile(pathToProducts, "utf-8");
-    const products = JSON.parse(productsString);
-
-    const productIndex = products.findIndex((product) => product.id === id);
-
-    if (productIndex === -1) {
-      return res.status(404).json({
-        message: `Producto con ID ${id} no encontrado`,
-      });
-    }
-
-    const updatedProduct = {
-      ...products[productIndex],
-      ...(title !== undefined && { title }),
-      ...(description !== undefined && { description }),
-      ...(code !== undefined && { code }),
-      ...(price !== undefined && { price }),
-      ...(status !== undefined && { status }),
-      ...(stock !== undefined && { stock }),
-      ...(category !== undefined && { category }),
-      ...(thumbnails !== undefined && { thumbnails }),
-    };
-
-    products[productIndex] = updatedProduct;
-
-    await fs.promises.writeFile(
-      pathToProducts,
-      JSON.stringify(products, null, "\t")
+    // Buscar y actualizar el producto
+    const updatedProduct = await ProductModel.findByIdAndUpdate(
+      id,
+      {
+        title,
+        description,
+        code,
+        price,
+        status,
+        stock,
+        category,
+        thumbnails,
+      },
+      { new: true } // Devuelve el documento actualizado
     );
 
-    res.status(200).json({
-      message: `Producto actualizado`,
-      data: updatedProduct,
-    });
+    if (updatedProduct) {
+      res.status(200).json({
+        message: "Producto actualizado",
+        data: updatedProduct,
+      });
+    } else {
+      res.status(404).json({ message: `Producto con ID ${id} no encontrado` });
+    }
   } catch (error) {
     res.status(500).json({ message: "Error al actualizar el producto", error });
   }
 });
 
+// Eliminar un producto por ID
 ProductsRouter.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const productsString = await fs.promises.readFile(pathToProducts, "utf-8");
-    let products = JSON.parse(productsString);
 
-    const productIndex = products.findIndex((product) => product.id === id);
+    // Buscar y eliminar el producto
+    const deletedProduct = await ProductModel.findByIdAndDelete(id);
 
-    if (productIndex === -1) {
-      return res.status(404).json({
-        message: `Producto con ID ${id} no encontrado`,
-      });
+    if (deletedProduct) {
+      res.status(200).json({ message: "Producto eliminado" });
+    } else {
+      res.status(404).json({ message: `Producto con ID ${id} no encontrado` });
     }
-
-    products.splice(productIndex, 1);
-
-    await fs.promises.writeFile(
-      pathToProducts,
-      JSON.stringify(products, null, "\t")
-    );
-
-    res.status(200).json({ message: `Producto eliminado` });
   } catch (error) {
     res.status(500).json({ message: "Error al eliminar el producto", error });
   }
